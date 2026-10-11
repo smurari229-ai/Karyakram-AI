@@ -21,7 +21,7 @@ dotenv.config();
 
 const app = express();
 const PORT = 3000;
-const DATA_DIR = path.resolve(process.cwd(), 'data');
+const DATA_DIR = process.env.VERCEL ? path.join('/tmp', 'karyakram-ai') : path.resolve(process.cwd(), 'data');
 const MEMORY_FILE = path.join(DATA_DIR, 'agent_memory.json');
 
 // Initialize Gemini SDK with telemetry header
@@ -970,6 +970,13 @@ async function startServer() {
   });
 }
 
-startServer().catch(err => {
-  console.error('Failed to start server:', err);
-});
+// Export the Express app for Vercel's serverless function entrypoint.
+export default app;
+
+// Local development uses the integrated Vite + Express server. Vercel invokes
+// the exported app through api/[...path].ts and serves dist/ as static output.
+if (!process.env.VERCEL) {
+  startServer().catch(err => {
+    console.error('Failed to start server:', err);
+  });
+}
