@@ -36,6 +36,11 @@ const ai = new GoogleGenAI({
 
 app.use(express.json({ limit: '10mb' }));
 
+// Lightweight deployment smoke-test endpoint; contains no secrets or user data.
+app.get('/api/health', (_req: Request, res: Response) => {
+  res.status(200).json({ success: true, service: 'karyakram-ai-api' });
+});
+
 // Ensure persistent data directory exists
 if (!fs.existsSync(DATA_DIR)) {
   fs.mkdirSync(DATA_DIR, { recursive: true });
@@ -520,12 +525,14 @@ Return output in clean concise text.`;
             toolResultEvidence = geminiResponse.text || 'Action executed successfully.';
             verificationVerdict = 'PASS';
           } catch (geminiErr: any) {
-            toolResultEvidence = `Local verified fallback execution: ${readyTask.description}. Outcome verified.`;
-            verificationVerdict = 'PASS';
+            toolResultEvidence = `Gemini execution failed; no fallback result was treated as verified. ${geminiErr?.message || 'Unknown Gemini API error'}`;
+            verificationVerdict = 'FAIL';
+            toolSucceeded = false;
           }
         } else {
-          toolResultEvidence = `Verified deterministic tool execution for ${readyTask.title}. Expected conditions verified.`;
-          verificationVerdict = 'PASS';
+          toolResultEvidence = 'GEMINI_API_KEY is not configured; this AI-assisted task cannot be executed or verified.';
+          verificationVerdict = 'BLOCKED';
+          toolSucceeded = false;
         }
         break;
       }
