@@ -1,5 +1,4 @@
 import express, { Request, Response } from 'express';
-import { createServer as createViteServer } from 'vite';
 import { GoogleGenAI } from '@google/genai';
 import fs from 'fs';
 import path from 'path';
@@ -960,6 +959,7 @@ app.post('/api/agent/reset', (req: Request, res: Response) => {
 // Start Full-Stack Server with Vite middleware
 async function startServer() {
   if (process.env.NODE_ENV !== 'production') {
+    const { createServer: createViteServer } = await import('vite');
     const vite = await createViteServer({
       server: { middlewareMode: true },
       appType: 'spa',
