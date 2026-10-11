@@ -1,5 +1,4 @@
 import express, { Request, Response } from 'express';
-import { createServer as createViteServer } from 'vite';
 import { GoogleGenAI } from '@google/genai';
 import fs from 'fs';
 import path from 'path';
@@ -21,7 +20,7 @@ dotenv.config();
 
 const app = express();
 const PORT = 3000;
-const DATA_DIR = path.resolve(process.cwd(), 'data');
+const DATA_DIR = process.env.VERCEL ? path.join('/tmp', 'karyakram-ai') : path.resolve(process.cwd(), 'data');
 const MEMORY_FILE = path.join(DATA_DIR, 'agent_memory.json');
 
 // Initialize Gemini SDK with telemetry header
@@ -35,6 +34,11 @@ const ai = new GoogleGenAI({
 });
 
 app.use(express.json({ limit: '10mb' }));
+
+// Lightweight deployment smoke-test endpoint; contains no secrets or user data.
+app.get('/api/health', (_req: Request, res: Response) => {
+  res.status(200).json({ success: true, service: 'karyakram-ai-api' });
+});
 
 // Ensure persistent data directory exists
 if (!fs.existsSync(DATA_DIR)) {
@@ -520,12 +524,14 @@ Return output in clean concise text.`;
             toolResultEvidence = geminiResponse.text || 'Action executed successfully.';
             verificationVerdict = 'PASS';
           } catch (geminiErr: any) {
-            toolResultEvidence = `Local verified fallback execution: ${readyTask.description}. Outcome verified.`;
-            verificationVerdict = 'PASS';
+            toolResultEvidence = `Gemini execution failed; no fallback result was treated as verified. ${geminiErr?.message || 'Unknown Gemini API error'}`;
+            verificationVerdict = 'FAIL';
+            toolSucceeded = false;
           }
         } else {
-          toolResultEvidence = `Verified deterministic tool execution for ${readyTask.title}. Expected conditions verified.`;
-          verificationVerdict = 'PASS';
+          toolResultEvidence = 'GEMINI_API_KEY is not configured; this AI-assisted task cannot be executed or verified.';
+          verificationVerdict = 'BLOCKED';
+          toolSucceeded = false;
         }
         break;
       }
@@ -953,6 +959,7 @@ app.post('/api/agent/reset', (req: Request, res: Response) => {
 // Start Full-Stack Server with Vite middleware
 async function startServer() {
   if (process.env.NODE_ENV !== 'production') {
+    const { createServer: createViteServer } = await import('vite');
     const vite = await createViteServer({
       server: { middlewareMode: true },
       appType: 'spa',
@@ -970,6 +977,13 @@ async function startServer() {
   });
 }
 
-startServer().catch(err => {
-  console.error('Failed to start server:', err);
-});
+// Export the Express app for Vercel's serverless function entrypoint.
+export default app;
+
+// Local development uses the integrated Vite + Express server. Vercel invokes
+// the exported app through api/[...path].ts and serves dist/ as static output.
+if (!process.env.VERCEL) {
+  startServer().catch(err => {
+    console.error('Failed to start server:', err);
+  });
+}
