@@ -1,0 +1,9 @@
+{
+  "name": "Karyakram AI - ₹0 Autonomous Engineering Agent",
+  "description": "Personal autonomous AI agent with Android-first dashboard, ₹0 free-tier execution loop, GitHub engineering workflows, persistent checkpoints, and Hinglish onboarding.",
+  "requestFramePermissions": [],
+  "majorCapabilities": [
+    "MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"
+  ]
+}
+

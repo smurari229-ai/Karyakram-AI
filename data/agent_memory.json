@@ -1,0 +1,269 @@
+{
+  "goal": {
+    "id": "goal-demo-1",
+    "title": "Automated Codebase Audit & CI Verification",
+    "description": "Autonomous repository inspection, security vulnerability scan, lint check, and GitHub Actions workflow hardening.",
+    "repositoryUrl": "https://github.com/public-demo/autonomous-project",
+    "branch": "agent/audit-and-fix",
+    "status": "idle",
+    "createdAt": "2026-10-11T05:48:03.096Z",
+    "updatedAt": "2026-10-11T05:48:03.096Z",
+    "constraints": [
+      "Zero cost: ₹0 budget strictly enforced",
+      "Never commit or push directly to main branch",
+      "Require user approval before creating Pull Request or writing disk changes",
+      "Every task must pass independent verification (PASS/FAIL/BLOCKED)",
+      "Maximum 3 retries on transient failures"
+    ],
+    "budget": "₹0.00"
+  },
+  "agentState": "paused",
+  "currentStage": "RECORD",
+  "cycleCount": 1,
+  "tasks": [
+    {
+      "id": "task-1",
+      "goalId": "goal-demo-1",
+      "title": "Inspect Repository Structure & Package Manifest",
+      "description": "Analyze repository files, identify package manager, scripts, and build targets.",
+      "stage": "OBSERVE",
+      "priority": "high",
+      "status": "completed",
+      "retryCount": 0,
+      "maxRetries": 3,
+      "dependencies": [],
+      "tool": "inspect_repo_files",
+      "toolArgs": {
+        "path": "./"
+      },
+      "verification": {
+        "expected": "Valid package.json with detected build and test scripts",
+        "method": "file_manifest_parser",
+        "status": "PASS",
+        "evidence": "Found package.json: Name \"react-example\", Scripts: [dev, build, start, preview, clean, lint]. Framework: React + Vite + Tailwind + Express.",
+        "timestamp": "2026-10-11T05:48:08.214Z"
+      },
+      "requiresApproval": false,
+      "branchName": "agent/audit-and-fix",
+      "resultSummary": "Found package.json: Name \"react-example\", Scripts: [dev, build, start, preview, clean, lint]. Framework: React + Vite + Tailwind + Express."
+    },
+    {
+      "id": "task-2",
+      "goalId": "goal-demo-1",
+      "title": "Security & Vulnerability Audit",
+      "description": "Audit dependencies for known CVEs, hardcoded credentials, and unsafe scripts.",
+      "stage": "ACT",
+      "priority": "high",
+      "status": "pending",
+      "retryCount": 0,
+      "maxRetries": 3,
+      "dependencies": [
+        "task-1"
+      ],
+      "tool": "audit_security_dependencies",
+      "toolArgs": {
+        "auditLevel": "moderate"
+      },
+      "verification": {
+        "expected": "Zero unapproved high/critical severity security issues",
+        "method": "security_audit_scanner",
+        "status": "NOT_RUN",
+        "evidence": "",
+        "timestamp": ""
+      },
+      "requiresApproval": false,
+      "branchName": "agent/audit-and-fix"
+    },
+    {
+      "id": "task-3",
+      "goalId": "goal-demo-1",
+      "title": "TypeScript Typecheck & Linter Verification",
+      "description": "Run static analysis to verify code soundness without runtime crashes.",
+      "stage": "VERIFY",
+      "priority": "medium",
+      "status": "pending",
+      "retryCount": 0,
+      "maxRetries": 3,
+      "dependencies": [
+        "task-1"
+      ],
+      "tool": "run_verification_test",
+      "toolArgs": {
+        "testType": "lint_and_types"
+      },
+      "verification": {
+        "expected": "Exit code 0 from TypeScript compilation check",
+        "method": "typecheck_runner",
+        "status": "NOT_RUN",
+        "evidence": "",
+        "timestamp": ""
+      },
+      "requiresApproval": false,
+      "branchName": "agent/audit-and-fix"
+    },
+    {
+      "id": "task-4",
+      "goalId": "goal-demo-1",
+      "title": "Generate GitHub Actions CI/CD Pipeline Spec",
+      "description": "Draft a zero-cost GitHub Actions workflow file for automated tests on pull requests.",
+      "stage": "ACT",
+      "priority": "medium",
+      "status": "pending",
+      "retryCount": 0,
+      "maxRetries": 3,
+      "dependencies": [
+        "task-2",
+        "task-3"
+      ],
+      "tool": "write_code_patch",
+      "toolArgs": {
+        "targetFile": ".github/workflows/ci.yml"
+      },
+      "verification": {
+        "expected": "Valid YAML workflow schema using free GitHub Actions quota",
+        "method": "workflow_syntax_validator",
+        "status": "NOT_RUN",
+        "evidence": "",
+        "timestamp": ""
+      },
+      "requiresApproval": true,
+      "approvalStatus": "pending",
+      "branchName": "agent/audit-and-fix"
+    },
+    {
+      "id": "task-5",
+      "goalId": "goal-demo-1",
+      "title": "Create Verified Pull Request Spec",
+      "description": "Compile verified test evidence, security summary, and open non-destructive PR.",
+      "stage": "RECORD",
+      "priority": "low",
+      "status": "pending",
+      "retryCount": 0,
+      "maxRetries": 3,
+      "dependencies": [
+        "task-4"
+      ],
+      "tool": "create_pull_request_spec",
+      "toolArgs": {
+        "base": "main",
+        "head": "agent/audit-and-fix"
+      },
+      "verification": {
+        "expected": "PR documentation with PASS verification evidence attached",
+        "method": "pr_integrity_check",
+        "status": "NOT_RUN",
+        "evidence": "",
+        "timestamp": ""
+      },
+      "requiresApproval": true,
+      "approvalStatus": "pending",
+      "branchName": "agent/audit-and-fix"
+    }
+  ],
+  "activeTaskId": null,
+  "logs": [
+    {
+      "id": "log-1791697688214",
+      "timestamp": "2026-10-11T05:48:08.214Z",
+      "stage": "VERIFY",
+      "taskId": "task-1",
+      "tool": "inspect_repo_files",
+      "inputDescription": "Inspect Repository Structure & Package Manifest",
+      "outputSummary": "VERIFIED PASS: Expected outcome matched recorded evidence.",
+      "evidence": "Found package.json: Name \"react-example\", Scripts: [dev, build, start, preview, clean, lint]. Framework: React + Vite + Tailwind + Express.",
+      "status": "success",
+      "cost": "₹0.00 (Free Tier)"
+    },
+    {
+      "id": "log-init-1",
+      "timestamp": "2026-10-11T05:48:03.096Z",
+      "stage": "OBSERVE",
+      "tool": "system_boot",
+      "inputDescription": "Agent system initialized with ₹0 budget rule",
+      "outputSummary": "Ready for user instructions. Least-privilege security active.",
+      "evidence": "Environment inspected: Node.js runtime, Express backend, Gemini Flash configured.",
+      "status": "success",
+      "cost": "₹0.00 (Free Tier)"
+    }
+  ],
+  "checkpoints": [
+    {
+      "id": "cp-1791697688214",
+      "timestamp": "2026-10-11T05:48:08.214Z",
+      "goalTitle": "Automated Codebase Audit & CI Verification",
+      "completedTasks": 1,
+      "totalTasks": 5,
+      "activeTaskId": "task-1",
+      "branchName": "agent/audit-and-fix",
+      "reason": "Task completed: Inspect Repository Structure & Package Manifest",
+      "stateSnapshot": {
+        "status": "running",
+        "currentStage": "RECORD"
+      }
+    },
+    {
+      "id": "checkpoint-init",
+      "timestamp": "2026-10-11T05:48:03.096Z",
+      "goalTitle": "Initial State Checkpoint",
+      "completedTasks": 0,
+      "totalTasks": 5,
+      "branchName": "agent/audit-and-fix",
+      "reason": "Boot checkpoint saved prior to autonomous loop run",
+      "stateSnapshot": {
+        "status": "idle",
+        "currentStage": "OBSERVE"
+      }
+    }
+  ],
+  "lessons": [
+    {
+      "id": "lesson-1",
+      "timestamp": "2026-10-11T05:48:03.096Z",
+      "topic": "Branch Security Rule",
+      "rule": "Never commit directly to main. Always isolate autonomous fixes in a dedicated agent branch.",
+      "evidence": "Prevented accidental main overwrite."
+    },
+    {
+      "id": "lesson-2",
+      "timestamp": "2026-10-11T05:48:03.096Z",
+      "topic": "Zero-Cost Verification Rule",
+      "rule": "Rely on GitHub Actions free public minutes and local type checks before reporting success.",
+      "evidence": "Verified ₹0 expense across all operations."
+    }
+  ],
+  "securityAudits": [
+    {
+      "id": "sec-1791697688214-ianv",
+      "timestamp": "2026-10-11T05:48:08.214Z",
+      "action": "Read repository manifests and configs",
+      "riskLevel": "LOW",
+      "status": "ALLOWED",
+      "reason": "Read-only operation auto-approved."
+    },
+    {
+      "id": "sec-1",
+      "timestamp": "2026-10-11T05:48:03.096Z",
+      "action": "File System Access Sandbox",
+      "riskLevel": "LOW",
+      "status": "ALLOWED",
+      "reason": "Read-only access granted for package inspection."
+    }
+  ],
+  "config": {
+    "maxRetries": 3,
+    "maxCyclesPerRun": 25,
+    "autoApproveReadOnly": true,
+    "requireApprovalForPr": true,
+    "requireApprovalForWrite": true,
+    "model": "gemini-3.8-flash",
+    "batterySaver": false
+  },
+  "pendingApproval": null,
+  "metrics": {
+    "totalPassedTests": 1,
+    "totalFailedTests": 0,
+    "totalBlocked": 0,
+    "zeroCostSpent": "₹0.00",
+    "branchWorkedOn": "agent/audit-and-fix"
+  }
+}
